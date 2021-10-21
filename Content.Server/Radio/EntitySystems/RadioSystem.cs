@@ -23,7 +23,7 @@ namespace Content.Server.Radio.EntitySystems
             var corruptLevel = 0;
             foreach (var server in EntityManager.EntityQuery<CommunicationServerComponent>())
             {
-                if (server.Enabled)
+                if (server.ReceiveMessage())
                 {
                     canSend = true;
                     corruptLevel = server.CorruptLevel;
