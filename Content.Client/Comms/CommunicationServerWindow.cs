@@ -16,6 +16,7 @@ namespace Content.Client.Comms
         public Button CorruptLevel2;
         public CommunicationServerWindow()
         {
+            Title = "Communications Server";
             Contents.AddChild(new BoxContainer()
             {
                 Children = {

@@ -15,7 +15,7 @@ namespace Content.Server.Comms
     [RegisterComponent]
     [ComponentReference(typeof(IActivate))]
     [ComponentReference(typeof(IInteractUsing))]
-    public class CommuncationServerComponent : Component, IActivate, IInteractUsing
+    public class CommunicationServerComponent : Component, IActivate, IInteractUsing
     {
         public override string Name => "CommunicationServer";
         [ViewVariables]
