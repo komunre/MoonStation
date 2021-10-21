@@ -1,0 +1,16 @@
+- type: entity
+  id: CommsServer
+  name: communications server
+  description: beep boop communications
+  placement:
+    mode: SnapgridCenter
+  components:
+    - type: Sprite
+      sprite: Objects/Misc/comms.rsi
+      state: server
+    - type: CommunicationServer
+    - type: Clickable
+    - type: UserInterface
+      interfaces:
+      - key: enum.CommsUiKey.Key
+        type: CommunicationServerBoundUserInterface
