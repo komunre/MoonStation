@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Content.Shared.ActionBlocker;
 using Content.Shared.CCVar;
 using Content.Shared.Friction;
+using Content.Shared.Gravity;
 using Content.Shared.MobState;
 using Content.Shared.Movement.Components;
 using Content.Shared.Pulling.Components;
@@ -102,6 +103,14 @@ namespace Content.Shared.Movement
             var transform = mover.Owner.Transform;
             var weightless = mover.Owner.IsWeightless(physicsComponent, mapManager: _mapManager, entityManager: _entityManager);
             var (walkDir, sprintDir) = mover.VelocityDir;
+
+            foreach (var planet in EntityManager.EntityQuery<SharedPlanetComponent>())
+            {
+                if (planet.Owner.Transform.MapPosition.MapId == transform.MapID)
+                {
+                    weightless = false;
+                }
+            }
 
             // Handle wall-pushes.
             if (weightless)

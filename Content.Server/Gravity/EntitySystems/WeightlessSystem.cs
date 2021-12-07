@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Content.Server.Alert;
 using Content.Shared.Alert;
 using Content.Shared.GameTicking;
@@ -25,6 +25,22 @@ namespace Content.Server.Gravity.EntitySystems
             SubscribeLocalEvent<RoundRestartCleanupEvent>(Reset);
             SubscribeLocalEvent<GravityChangedMessage>(GravityChanged);
             SubscribeLocalEvent<EntParentChangedMessage>(EntParentChanged);
+            SubscribeLocalEvent<MoveEvent>(EntityMoving);
+        }
+
+        private void EntityMoving(ref MoveEvent ev)
+        {
+            if (!ev.Sender.TryGetComponent(out ServerAlertsComponent? status)) return;
+
+            var map = ev.Sender.Transform.MapPosition.MapId;
+
+            foreach (var planet in EntityManager.EntityQuery<PlanetComponent>())
+            {
+                if (planet.Owner.Transform.MapPosition.MapId == map)
+                {
+                    RemoveWeightless(status);
+                }
+            }
         }
 
         public void Reset(RoundRestartCleanupEvent ev)
@@ -38,6 +54,16 @@ namespace Content.Server.Gravity.EntitySystems
             var alerts = _alerts.GetOrNew(gridId);
 
             alerts.Add(status);
+
+            var planetEntities = EntityManager.EntityQuery<PlanetComponent>();
+            foreach (var planet in planetEntities)
+            {
+                if (planet.Owner.Transform.MapID == status.Owner.Transform.MapID) // Enable gravity if on planet
+                {
+                    RemoveWeightless(status);
+                    return;
+                }
+            }
 
             if (_mapManager.TryGetGrid(status.Owner.Transform.GridID, out var grid))
             {
@@ -71,6 +97,7 @@ namespace Content.Server.Gravity.EntitySystems
                 return;
             }
 
+            
             if (ev.HasGravity)
             {
                 foreach (var status in statuses)

@@ -77,6 +77,9 @@ namespace Content.Shared.CCVar
         public static readonly CVarDef<string>
             GameMap = CVarDef.Create("game.map", "Maps/salkom.yml", CVar.SERVERONLY);
 
+        // Is map a planet
+        //public static readonly CVarDef<bool> Planet = CVarDef.Create("map.planet", true, CVar.SERVERONLY);
+
         /// <summary>
         ///     Whether a random position offset will be applied to the station on roundstart.
         /// </summary>

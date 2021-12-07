@@ -1,0 +1,10 @@
+- type: entity
+  id: MoonLike
+  description: moon-like marker
+  components:
+    - type: Sprite
+      sprite: Markers/planet.rsi
+      visible: false
+      state: icon
+    - type: Planet
+      texture: /Textures/Effects/moonland.png

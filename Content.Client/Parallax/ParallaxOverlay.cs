@@ -13,9 +13,9 @@ namespace Content.Client.Parallax
         [Dependency] private readonly IParallaxManager _parallaxManager = default!;
         [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
 
-        private const float Slowness = 0.5f;
+        public float Slowness = 0.5f;
 
-        private Texture? _parallaxTexture;
+        public Texture? ParallaxTexture;
 
         public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowWorld;
         private readonly ShaderInstance _shader;
@@ -27,17 +27,22 @@ namespace Content.Client.Parallax
 
             if (_parallaxManager.ParallaxTexture == null)
             {
-                _parallaxManager.OnTextureLoaded += texture => _parallaxTexture = texture;
+                _parallaxManager.OnTextureLoaded += texture => ParallaxTexture = texture;
             }
             else
             {
-                _parallaxTexture = _parallaxManager.ParallaxTexture;
+                ParallaxTexture = _parallaxManager.ParallaxTexture;
             }
+        }
+
+        public void SetToDefaultTex()
+        {
+            ParallaxTexture = _parallaxManager.ParallaxTexture;
         }
 
         protected override void Draw(in OverlayDrawArgs args)
         {
-            if (_parallaxTexture == null || args.Viewport.Eye == null)
+            if (ParallaxTexture == null || args.Viewport.Eye == null)
             {
                 return;
             }
@@ -45,7 +50,7 @@ namespace Content.Client.Parallax
             var screenHandle = args.WorldHandle;
             screenHandle.UseShader(_shader);
 
-            var (sizeX, sizeY) = _parallaxTexture.Size / (float) EyeManager.PixelsPerMeter;
+            var (sizeX, sizeY) = ParallaxTexture.Size / (float) EyeManager.PixelsPerMeter;
             var (posX, posY) = args.Viewport.Eye.Position;
             var o = new Vector2(posX * Slowness, posY * Slowness);
 
@@ -64,7 +69,7 @@ namespace Content.Client.Parallax
             {
                 for (var y = b; y < args.WorldBounds.Top; y += sizeY)
                 {
-                    screenHandle.DrawTexture(_parallaxTexture, (x, y));
+                    screenHandle.DrawTexture(ParallaxTexture, (x, y));
                 }
             }
         }
